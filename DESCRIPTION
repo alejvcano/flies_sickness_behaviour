@@ -1,0 +1,26 @@
+Package: immunity-fly
+Type: Package
+Title: The Title of the Project
+Version: 0.0.0.9000
+Authors@R: c(
+    person(given   = "Alejandro",
+           family  = "V Cano",
+           role    = c("aut", "cre", "cph"),
+           email   = "alejvcano@gmail.com",
+           comment = c(ORCID = "{{orcid}}")))
+Description: A paragraph providing a full description of the project (on 
+    several lines...)
+URL: https://github.com/alejvcano/immunity-fly
+BugReports: https://github.com/alejvcano/immunity-fly/issues
+License: GPL-2
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: 
+    devtools,
+    dplyr,
+    rdeps,
+    readr,
+    ecoFAST
+Depends:
+    ggplot2
