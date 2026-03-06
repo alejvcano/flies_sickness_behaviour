@@ -21,6 +21,7 @@ Imports:
     dplyr,
     rdeps,
     readr,
-    ecoFAST
+    ecoFAST,
+    multcomp
 Depends:
     ggplot2
