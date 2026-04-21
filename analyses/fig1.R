@@ -44,7 +44,7 @@ response_data_pre <- response_data_raw |>
     class     = ifelse(Status_dead0_alive1 == 0, "dead", "alive")
   )
 
-########## PANEL A – ACTIVITY TIME SERIES (4 rows x 1 col) ##########
+########## PANEL A – ACTIVITY TIME SERIES  ##########
 
 fly_data_hourly <- response_data_pre |>
   dplyr::rename(id = "FlyID") |>
@@ -86,15 +86,14 @@ activitytimeseries <- ggplot2::ggplot() +
     size     = 4.0,
     fontface = "italic"
   ) +
-  ggplot2::facet_wrap(~ Treatment, ncol = 2) +   # <-- 4 rows, 1 column
-  ggplot2::scale_x_continuous(
+  ggplot2::facet_wrap(~ Treatment, ncol = 2) +   
     expand = ggplot2::expansion(add = c(0, 10)),
     breaks = seq(0, max(fly_data_hourly$hour, na.rm = TRUE), by = 100)
   ) +
   ggplot2::scale_y_continuous(limits = c(0, 20)) +
   ggplot2::scale_color_manual(values = my_color_palette) +
   ggplot2::labs(
-    x = "Time post-pricking (hours)",   # <-- updated x label
+    x = "Time post-pricking (hours)",  
     y = "Mean activity (a.u.)"
   ) +
   ggplot2::coord_cartesian(clip = "off") +
@@ -103,12 +102,10 @@ activitytimeseries <- ggplot2::ggplot() +
     legend.position = "none",
     axis.text       = ggplot2::element_text(size = 11),
     axis.title      = ggplot2::element_text(size = 14),
-    strip.text      = ggplot2::element_text(face = "bold", size = 15),  # <-- larger treatment labels
+    strip.text      = ggplot2::element_text(face = "bold", size = 15),
     panel.spacing   = ggplot2::unit(1.0, "lines"),
     plot.margin     = ggplot2::margin(5, 15, 5, 5, "pt")
   )
-
-########## SAVE — left half of 16:9 slide (portrait-ish, 4 stacked panels) ##########
 
 cowplot::save_plot(
   "outputs/FigA_activity_timeseries.png",
