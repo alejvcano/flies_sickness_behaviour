@@ -77,3 +77,31 @@ compute_group_plv_matrix <- function(group_flies, min_length = 10) {
   }
   plv_mat
 }
+
+########## HELPER FUNCTIONS ##########
+
+remove_trailing_zeros <- function(df) {
+  df |>
+    dplyr::group_by(FlyID) |>
+    dplyr::mutate(
+      last_nonzero = ifelse(
+        any(Activity != 0),
+        max(which(Activity != 0), na.rm = TRUE),
+        0L
+      )
+    ) |>
+    dplyr::filter(dplyr::row_number() <= last_nonzero) |>
+    dplyr::select(-last_nonzero) |>
+    dplyr::ungroup()
+}
+
+fit_theilsen <- function(df) {
+  fit     <- mblm::mblm(Last_mov ~ mean_div_hour, data = df, repeated = FALSE)
+  fit_sum <- summary(fit)
+  data.frame(
+    ts_slope     = coef(fit)[2],
+    ts_intercept = coef(fit)[1],
+    p_val        = fit_sum$coefficients[2, 4],
+    n            = nrow(df)
+  )
+}

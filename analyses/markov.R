@@ -3,15 +3,16 @@
 response_data_raw <- read.csv("data/flies_data.csv", sep = ";")
 key               <- read.csv("data/flies_info.csv", sep = ";")
 
-treatment_order  <- c("naive", "PBS", "heatkill", "PentomophilaA", "PentomophilaB")
+treatment_order  <- c("naive", "injured", "immune stimulated",
+                      "infected (acute)", "infected (chronic)")
 my_color_palette <- stats::setNames(
   c("#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00"),
   treatment_order
 )
 
 MINUTES_PER_HOUR <- 60
-ZOOM_MINUTES     <- 3 * 24 * 60
 DAY1_MINUTES     <- 24 * 60
+PENTO_THRESHOLD  <- 12000
 
 remove_trailing_zeros <- function(df) {
   df |>
@@ -28,7 +29,6 @@ remove_trailing_zeros <- function(df) {
     dplyr::ungroup()
 }
 
-# ── Compute Last_mov from raw data ──
 last_mov_raw <- response_data_raw |>
   tidyr::pivot_longer(
     cols      = -c(Date, Time, Light1_Dark0),
@@ -42,7 +42,6 @@ last_mov_raw <- response_data_raw |>
     .groups  = "drop"
   )
 
-# ── Build dataset, split Pentomophila into A/B ──
 response_data_day1 <- response_data_raw |>
   tidyr::pivot_longer(
     cols      = -c(Date, Time, Light1_Dark0),
@@ -63,8 +62,10 @@ response_data_day1 <- response_data_raw |>
   remove_trailing_zeros() |>
   dplyr::mutate(
     Treatment = dplyr::case_when(
-      Treatment == "Pentomophila" & Last_mov <  12000 ~ "PentomophilaA",
-      Treatment == "Pentomophila" & Last_mov >= 12000 ~ "PentomophilaB",
+      Treatment == "Pentomophila" & Last_mov <  PENTO_THRESHOLD ~ "infected (acute)",
+      Treatment == "Pentomophila" & Last_mov >= PENTO_THRESHOLD ~ "infected (chronic)",
+      Treatment == "PBS"                                         ~ "injured",
+      Treatment == "heatkill"                                    ~ "immune stimulated",
       TRUE ~ Treatment
     ),
     Treatment = factor(Treatment, levels = treatment_order),
@@ -73,328 +74,286 @@ response_data_day1 <- response_data_raw |>
     State     = ifelse(Activity > 0, "Active", "Inactive")
   )
 
-cat("Day 1 sample sizes by treatment:\n")
+cat("Day 1 sample sizes:\n")
 print(
   response_data_day1 |>
     dplyr::distinct(FlyID, Treatment, Fly_Sex) |>
     dplyr::count(Treatment, Fly_Sex)
 )
 
-########## TRANSITION MATRIX CALCULATION ##########
+########## TRANSITION MATRICES ##########
 
 compute_transition_matrix <- function(states_vector) {
   if (length(states_vector) < 2) return(NULL)
-
   states <- c("Active", "Inactive")
-  mat <- matrix(0, nrow = 2, ncol = 2, dimnames = list(states, states))
-
+  mat    <- matrix(0, nrow = 2, ncol = 2, dimnames = list(states, states))
   for (i in 1:(length(states_vector) - 1)) {
-    from <- states_vector[i]
-    to   <- states_vector[i + 1]
-    mat[from, to] <- mat[from, to] + 1
+    mat[states_vector[i], states_vector[i + 1]] <-
+      mat[states_vector[i], states_vector[i + 1]] + 1
   }
-
   mat_prob <- mat / rowSums(mat)
-
-  return(list(
-    counts = mat,
-    probs  = mat_prob,
-    n_transitions = sum(mat)
-  ))
+  list(counts = mat, probs = mat_prob, n_transitions = sum(mat))
 }
-
-########## AGGREGATE TRANSITION MATRICES BY TREATMENT+SEX ##########
 
 transition_results <- response_data_day1 |>
   dplyr::group_by(FlyID, Treatment, Fly_Sex) |>
-  dplyr::summarise(
-    state_seq = list(State),
-    n_minutes = dplyr::n(),
-    .groups   = "drop"
-  ) |>
-  dplyr::mutate(
-    trans_mat  = purrr::map(state_seq, compute_transition_matrix)
-  ) |>
-  dplyr::filter(!is.na(purrr::map_lgl(trans_mat, ~!is.null(.)))) |>
+  dplyr::summarise(state_seq = list(State), .groups = "drop") |>
+  dplyr::mutate(trans_mat = purrr::map(state_seq, compute_transition_matrix)) |>
+  dplyr::filter(purrr::map_lgl(trans_mat, ~!is.null(.))) |>
   dplyr::mutate(
     counts_mat = purrr::map(trans_mat, ~.$counts),
     probs_mat  = purrr::map(trans_mat, ~.$probs),
     n_trans    = purrr::map_dbl(trans_mat, ~.$n_transitions)
   )
 
-########## EXTRACT PER-FLY PROBABILITIES & RATIOS ##########
-
 per_fly_probs <- transition_results |>
   dplyr::mutate(
     active_to_active     = purrr::map_dbl(probs_mat, ~.[1, 1]),
     active_to_inactive   = purrr::map_dbl(probs_mat, ~.[1, 2]),
     inactive_to_active   = purrr::map_dbl(probs_mat, ~.[2, 1]),
-    inactive_to_inactive = purrr::map_dbl(probs_mat, ~.[2, 2])
+    inactive_to_inactive = purrr::map_dbl(probs_mat, ~.[2, 2]),
+    on_off_ratio         = inactive_to_active / active_to_inactive
   ) |>
   dplyr::select(FlyID, Treatment, Fly_Sex,
                 active_to_active, active_to_inactive,
-                inactive_to_active, inactive_to_inactive) |>
-  dplyr::mutate(
-    persistence_ratio = active_to_active / inactive_to_inactive,
-    on_off_ratio      = inactive_to_active / active_to_inactive
-  )
-
-########## AGGREGATE BY TREATMENT+SEX (COUNTS FOR HEATMAP & FLOW) ##########
+                inactive_to_active, inactive_to_inactive,
+                on_off_ratio)
 
 aggregated_transitions <- transition_results |>
-  dplyr::group_by(Treatment, Fly_Sex) |>
   dplyr::mutate(
     active_to_active     = purrr::map_dbl(counts_mat, ~.[1, 1]),
     active_to_inactive   = purrr::map_dbl(counts_mat, ~.[1, 2]),
     inactive_to_active   = purrr::map_dbl(counts_mat, ~.[2, 1]),
     inactive_to_inactive = purrr::map_dbl(counts_mat, ~.[2, 2])
   ) |>
+  dplyr::group_by(Treatment, Fly_Sex) |>
   dplyr::summarise(
-    n_flies                  = dplyr::n(),
-    sum_active_to_active     = sum(active_to_active),
-    sum_active_to_inactive   = sum(active_to_inactive),
-    sum_inactive_to_active   = sum(inactive_to_active),
-    sum_inactive_to_inactive = sum(inactive_to_inactive),
+    dplyr::across(c(active_to_active, active_to_inactive,
+                    inactive_to_active, inactive_to_inactive), sum),
+    n_flies = dplyr::n(),
     .groups = "drop"
   ) |>
   dplyr::mutate(
-    p_active_to_active     = sum_active_to_active / (sum_active_to_active + sum_active_to_inactive),
-    p_active_to_inactive   = sum_active_to_inactive / (sum_active_to_active + sum_active_to_inactive),
-    p_inactive_to_active   = sum_inactive_to_active / (sum_inactive_to_active + sum_inactive_to_inactive),
-    p_inactive_to_inactive = sum_inactive_to_inactive / (sum_inactive_to_active + sum_inactive_to_inactive),
-    Treatment = factor(Treatment, levels = treatment_order)
+    total_active   = active_to_active + active_to_inactive,
+    total_inactive = inactive_to_active + inactive_to_inactive,
+    p_aa = active_to_active     / total_active,
+    p_ai = active_to_inactive   / total_active,
+    p_ia = inactive_to_active   / total_inactive,
+    p_ii = inactive_to_inactive / total_inactive
   )
 
-########## SUMMARY STATS FOR B & C (MEDIAN + IQR) ##########
-
-persistence_summary <- per_fly_probs |>
-  dplyr::filter(!is.infinite(persistence_ratio), !is.na(persistence_ratio)) |>
-  dplyr::group_by(Treatment, Fly_Sex) |>
-  dplyr::summarise(
-    median_ratio = median(persistence_ratio, na.rm = TRUE),
-    q1_ratio     = quantile(persistence_ratio, 0.25, na.rm = TRUE),
-    q3_ratio     = quantile(persistence_ratio, 0.75, na.rm = TRUE),
-    .groups      = "drop"
-  ) |>
-  dplyr::mutate(Treatment = factor(Treatment, levels = treatment_order))
-
-on_off_summary <- per_fly_probs |>
-  dplyr::filter(!is.infinite(on_off_ratio), !is.na(on_off_ratio)) |>
-  dplyr::group_by(Treatment, Fly_Sex) |>
-  dplyr::summarise(
-    median_ratio = median(on_off_ratio, na.rm = TRUE),
-    q1_ratio     = quantile(on_off_ratio, 0.25, na.rm = TRUE),
-    q3_ratio     = quantile(on_off_ratio, 0.75, na.rm = TRUE),
-    .groups      = "drop"
-  ) |>
-  dplyr::mutate(Treatment = factor(Treatment, levels = treatment_order))
-
-########## PLOT A: HEATMAP ##########
+########## PANEL A – HEATMAP ##########
 
 heatmap_data <- aggregated_transitions |>
-  dplyr::select(Treatment, Fly_Sex,
-                p_active_to_active, p_active_to_inactive,
-                p_inactive_to_active, p_inactive_to_inactive) |>
   tidyr::pivot_longer(
-    cols      = starts_with("p_"),
+    cols      = c(p_aa, p_ai, p_ia, p_ii),
     names_to  = "Transition",
     values_to = "Probability"
   ) |>
   dplyr::mutate(
-    Transition_label = dplyr::recode(
-      stringr::str_replace_all(Transition, "p_", ""),
-      "active_to_active"     = "Active→Active",
-      "active_to_inactive"   = "Active→Inactive",
-      "inactive_to_active"   = "Inactive→Active",
-      "inactive_to_inactive" = "Inactive→Inactive"
-    ),
-    Transition_label = factor(Transition_label,
-                              levels = c("Active→Active", "Active→Inactive",
-                                         "Inactive→Active", "Inactive→Inactive"))
+    Transition_label = dplyr::recode(Transition,
+      p_aa = "Active → Active",
+      p_ai = "Active → Inactive",
+      p_ia = "Inactive → Active",
+      p_ii = "Inactive → Inactive"
+    )
   )
 
-p_heatmap <- ggplot(heatmap_data,
-                    aes(x = Treatment, y = Transition_label,
-                        fill = Treatment, alpha = Probability)) +
-  geom_tile(color = "white", linewidth = 1.5) +
-  geom_text(aes(label = sprintf("%.3f", Probability), alpha = 1),
-            size = 3.5, fontface = "bold", color = "black") +
-  facet_wrap(~ Fly_Sex) +
-  scale_fill_manual(values = my_color_palette, guide = "none") +
-  scale_alpha_continuous(range = c(0.2, 1), guide = "none") +
-  labs(
-    x       = "Treatment",
-    y       = "Transition",
-    title   = "Markov Chain Transition Probabilities - Day 1",
-    caption = "Color = treatment | Alpha = probability strength"
+p_heatmap <- ggplot2::ggplot(
+  heatmap_data,
+  ggplot2::aes(x = Treatment, y = Transition_label,
+               fill = Treatment, alpha = Probability)
+) +
+  ggplot2::geom_tile(color = "white", linewidth = 1.5) +
+  ggplot2::geom_text(
+    ggplot2::aes(label = sprintf("%.3f", Probability), alpha = 1),
+    size = 2.5, color = "black"
   ) +
-  theme_minimal(base_size = 12) +
-  theme(
-    axis.text.x      = element_text(angle = 45, hjust = 1, size = 10),
-    plot.title       = element_text(hjust = 0.5, face = "bold", size = 13),
-    strip.text       = element_text(face = "bold", size = 11),
-    panel.grid       = element_blank()
+  ggplot2::facet_wrap(~ Fly_Sex) +
+  ggplot2::scale_fill_manual(values = my_color_palette, guide = "none") +
+  ggplot2::scale_alpha_continuous(range = c(0.2, 1), guide = "none") +
+  ggplot2::labs(x = NULL, y = NULL, title = NULL) +
+  ggplot2::theme_minimal(base_size = 13) +
+  ggplot2::theme(
+    axis.text.x      = ggplot2::element_text(angle = 35, hjust = 1,
+                                             size = 9, face = "bold"),
+    strip.text       = ggplot2::element_text(face = "bold", size = 11),
+    panel.grid       = ggplot2::element_blank()
   )
 
-########## PLOT B: PERSISTENCE RATIO - BAR + SCATTER + IQR ERRORBARS ##########
-
-persistence_scatter <- per_fly_probs |>
-  dplyr::filter(!is.infinite(persistence_ratio), !is.na(persistence_ratio)) |>
-  dplyr::mutate(Treatment = factor(Treatment, levels = treatment_order))
-
-p_persistence <- ggplot() +
-  # Gray scatter (individual flies) — drawn first so bars appear on top
-  geom_jitter(data = persistence_scatter,
-              aes(x = Treatment, y = persistence_ratio),
-              width = 0.2, size = 2, alpha = 0.4, color = "lightgray") +
-  # Median bar
-  geom_col(data = persistence_summary,
-           aes(x = Treatment, y = median_ratio, fill = Treatment),
-           color = "black", linewidth = 0.8, alpha = 0.85, width = 0.6) +
-  # IQR error bars
-  geom_errorbar(data = persistence_summary,
-                aes(x = Treatment, ymin = q1_ratio, ymax = q3_ratio),
-                width = 0.25, linewidth = 1.2, color = "black") +
-  facet_wrap(~ Fly_Sex) +
-  scale_fill_manual(values = my_color_palette, guide = "none") +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-  labs(
-    x       = "Treatment",
-    y       = "Active / Inactive Persistence Ratio",
-    title   = "Persistence Ratio - Day 1",
-    caption = "Bar = median | Error bars = IQR (Q1–Q3) | Gray dots = individual flies"
-  ) +
-  theme_minimal(base_size = 12) +
-  theme(
-    axis.text.x        = element_text(angle = 45, hjust = 1),
-    plot.title         = element_text(hjust = 0.5, face = "bold"),
-    strip.text         = element_text(face = "bold", size = 11),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor   = element_blank()
-  )
-
-########## PLOT C: ON/OFF RATIO - BAR + SCATTER + IQR ERRORBARS ##########
+########## PANEL B – ON/OFF RATIO ##########
 
 on_off_scatter <- per_fly_probs |>
-  dplyr::filter(!is.infinite(on_off_ratio), !is.na(on_off_ratio)) |>
-  dplyr::mutate(Treatment = factor(Treatment, levels = treatment_order))
+  dplyr::filter(!is.infinite(on_off_ratio), !is.nan(on_off_ratio),
+                !is.na(on_off_ratio))
 
-p_on_off <- ggplot() +
-  # Gray scatter (individual flies) — drawn first so bars appear on top
-  geom_jitter(data = on_off_scatter,
-              aes(x = Treatment, y = on_off_ratio),
-              width = 0.2, size = 2, alpha = 0.4, color = "lightgray") +
-  # Median bar
-  geom_col(data = on_off_summary,
-           aes(x = Treatment, y = median_ratio, fill = Treatment),
-           color = "black", linewidth = 0.8, alpha = 0.85, width = 0.6) +
-  # IQR error bars
-  geom_errorbar(data = on_off_summary,
-                aes(x = Treatment, ymin = q1_ratio, ymax = q3_ratio),
-                width = 0.25, linewidth = 1.2, color = "black") +
-  facet_wrap(~ Fly_Sex) +
-  scale_fill_manual(values = my_color_palette, guide = "none") +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-  labs(
-    x       = "Treatment",
-    y       = "Turn ON / Turn OFF Ratio",
-    title   = "Activity Initiation vs Termination Ratio - Day 1",
-    caption = "Bar = median | Error bars = IQR (Q1–Q3) | Gray dots = individual flies"
-  ) +
-  theme_minimal(base_size = 12) +
-  theme(
-    axis.text.x        = element_text(angle = 45, hjust = 1),
-    plot.title         = element_text(hjust = 0.5, face = "bold"),
-    strip.text         = element_text(face = "bold", size = 11),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor   = element_blank()
-  )
-
-########## PLOT D: TRANSITION FLOW (NORMALIZED PER FLY) ##########
-
-flow_normalized <- transition_results |>
-  dplyr::mutate(
-    active_to_active     = purrr::map_dbl(counts_mat, ~.[1, 1]),
-    active_to_inactive   = purrr::map_dbl(counts_mat, ~.[1, 2]),
-    inactive_to_active   = purrr::map_dbl(counts_mat, ~.[2, 1]),
-    inactive_to_inactive = purrr::map_dbl(counts_mat, ~.[2, 2])
-  ) |>
+on_off_summary <- on_off_scatter |>
   dplyr::group_by(Treatment, Fly_Sex) |>
   dplyr::summarise(
-    mean_active_to_active     = mean(active_to_active),
-    mean_active_to_inactive   = mean(active_to_inactive),
-    mean_inactive_to_active   = mean(inactive_to_active),
-    mean_inactive_to_inactive = mean(inactive_to_inactive),
-    .groups = "drop"
-  ) |>
-  tidyr::pivot_longer(
-    cols      = starts_with("mean_"),
-    names_to  = "Transition",
-    values_to = "Count"
-  ) |>
-  dplyr::mutate(
-    From = dplyr::case_when(
-      Transition %in% c("mean_active_to_active",
-                        "mean_active_to_inactive")   ~ "Active",
-      Transition %in% c("mean_inactive_to_active",
-                        "mean_inactive_to_inactive") ~ "Inactive"
-    ),
-    To = dplyr::case_when(
-      Transition %in% c("mean_active_to_active",
-                        "mean_inactive_to_active")   ~ "Active",
-      Transition %in% c("mean_active_to_inactive",
-                        "mean_inactive_to_inactive") ~ "Inactive"
-    ),
-    Treatment = factor(Treatment, levels = treatment_order)
+    median_val = median(on_off_ratio, na.rm = TRUE),
+    q25        = quantile(on_off_ratio, 0.25, na.rm = TRUE),
+    q75        = quantile(on_off_ratio, 0.75, na.rm = TRUE),
+    .groups    = "drop"
   )
 
-p_flow <- ggplot(flow_normalized, aes(x = From, y = Count, fill = To)) +
-  geom_col(position = "stack", color = "black", linewidth = 0.8) +
-  facet_grid(Fly_Sex ~ Treatment) +
-  scale_fill_manual(values = c("Active" = "#3498DB", "Inactive" = "#E74C3C"),
-                    name = "Next State") +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
-  labs(
-    x       = "Current State",
-    y       = "Mean Transitions per Fly",
-    title   = "Transition Flow - Normalized per Fly - Day 1",
-    caption = "Blue = transitions to Active | Red = transitions to Inactive"
+p_on_off <- ggplot2::ggplot() +
+  ggplot2::geom_jitter(
+    data  = on_off_scatter,
+    ggplot2::aes(x = Treatment, y = on_off_ratio, color = Treatment),
+    width = 0.2, alpha = 0.4, size = 1.5
   ) +
-  theme_minimal(base_size = 11) +
-  theme(
-    plot.title         = element_text(hjust = 0.5, face = "bold"),
-    strip.text         = element_text(face = "bold", size = 10),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor   = element_blank(),
-    legend.position    = "bottom"
+  ggplot2::geom_crossbar(
+    data  = on_off_summary,
+    ggplot2::aes(x = Treatment, y = median_val,
+                 ymin = q25, ymax = q75, fill = Treatment),
+    width = 0.5, color = "black", linewidth = 0.5
+  ) +
+  ggplot2::facet_wrap(~ Fly_Sex) +
+  ggplot2::scale_color_manual(values = my_color_palette) +
+  ggplot2::scale_fill_manual(values = my_color_palette) +
+  ggplot2::scale_y_log10() +
+  ggplot2::labs(x = NULL, y = "On/Off ratio (log scale)", title = NULL) +
+  ggplot2::theme_minimal(base_size = 13) +
+  ggplot2::theme(
+    axis.text.x      = ggplot2::element_text(angle = 35, hjust = 1,
+                                             size = 9, face = "bold"),
+    strip.text       = ggplot2::element_text(face = "bold", size = 11),
+    legend.position  = "none",
+    panel.grid.minor = ggplot2::element_blank()
   )
 
-########## ASSEMBLE ALL PLOTS ##########
+
+########## ASSEMBLE FIGURE (A half-width | B full | C full) ##########
+# Use a nested plot_grid: inner row holds A+B, then combine with C below.
+# rel_widths c(1, 2) makes A half the width of B.
 
 Fig_markov <- cowplot::plot_grid(
   p_heatmap,
-  p_persistence,
   p_on_off,
-  p_flow,
-  labels      = c("A", "B", "C", "D"),
-  label_size  = 14,
+  labels      = c("A", "B"),
+  label_size  = 12,
   ncol        = 2,
-  rel_heights = c(1, 1)
+  rel_widths  = c(6, 4)
 )
 
 print(Fig_markov)
-cowplot::save_plot("outputs/Figure_markov_day1_v3.png", Fig_markov,
-                   base_width = 16, base_height = 14)
+cowplot::save_plot("outputs/Figure_markov_day1.png", Fig_markov,
+                   base_width = 8, base_height =4)
 
-########## EXPORT RESULTS ##########
+########## PANEL D – POWER LAW (separate figure) ##########
+
+bout_activity_raw <- response_data_day1 |>
+  dplyr::group_by(FlyID, Treatment, Fly_Sex) |>
+  dplyr::summarise(
+    bout_totals = {
+      r         <- rle(Activity > 0)
+      is_active <- r$values
+      lengths   <- r$lengths
+      vals      <- Activity
+      ends      <- cumsum(lengths)
+      starts    <- ends - lengths + 1
+      totals    <- mapply(function(s, e, active) {
+        if (active) sum(vals[s:e]) else NA_real_
+      }, starts, ends, is_active)
+      list(totals[!is.na(totals)])
+    },
+    .groups = "drop"
+  ) |>
+  tidyr::unnest_longer(bout_totals) |>
+  dplyr::filter(bout_totals > 0)
+
+powerlaw_counts <- bout_activity_raw |>
+  dplyr::group_by(Treatment, bout_totals) |>
+  dplyr::summarise(n_bouts = dplyr::n(), .groups = "drop") |>
+  dplyr::filter(bout_totals >= 1)
+
+# Fit log-log OLS per treatment — use all rows so naive is never excluded
+powerlaw_fits <- powerlaw_counts |>
+  dplyr::group_by(Treatment) |>
+  dplyr::summarise(
+    fit     = list(lm(log10(n_bouts) ~ log10(bout_totals),
+                      data = dplyr::pick(dplyr::everything()))),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    slope     = purrr::map_dbl(fit, ~coef(.)[2]),
+    intercept = purrr::map_dbl(fit, ~coef(.)[1]),
+    r2        = purrr::map_dbl(fit, ~summary(.)$r.squared),
+    label     = sprintf("\u03b1 = %.2f\nR\u00b2 = %.2f", slope, r2)
+  )
+
+cat("\nPower law fits:\n")
+print(dplyr::select(powerlaw_fits, Treatment, slope, intercept, r2))
+
+# Predicted lines
+pred_lines <- powerlaw_fits |>
+  dplyr::mutate(
+    x_seq = purrr::map(Treatment, ~{
+      sub  <- dplyr::filter(powerlaw_counts, Treatment == .x)
+      seq(log10(min(sub$bout_totals)), log10(max(sub$bout_totals)),
+          length.out = 100)
+    }),
+    y_seq = purrr::map2(x_seq, fit, ~predict(
+      .y, newdata = data.frame(bout_totals = 10^.x)))
+  ) |>
+  tidyr::unnest(cols = c(x_seq, y_seq))
+
+# Label positions per treatment facet
+label_pos <- powerlaw_counts |>
+  dplyr::group_by(Treatment) |>
+  dplyr::summarise(
+    x_lab = 10^(log10(max(bout_totals)) * 0.5),
+    y_lab = max(n_bouts),
+    .groups = "drop"
+  ) |>
+  dplyr::left_join(dplyr::select(powerlaw_fits, Treatment, label),
+                   by = "Treatment")
+
+p_powerlaw <- ggplot2::ggplot(
+  powerlaw_counts,
+  ggplot2::aes(x = bout_totals, y = n_bouts, color = Treatment)
+) +
+  ggplot2::geom_point(alpha = 0.5, size = 1.4) +
+  ggplot2::geom_line(
+    data      = pred_lines,
+    ggplot2::aes(x = 10^x_seq, y = 10^y_seq, color = Treatment),
+    linewidth = 1.0, linetype = "dashed"
+  ) +
+  ggplot2::geom_text(
+    data    = label_pos,
+    ggplot2::aes(x = x_lab, y = y_lab, label = label, color = Treatment),
+    size    = 3.2, hjust = 0, vjust = 1.2, fontface = "italic",
+    show.legend = FALSE
+  ) +
+  ggplot2::facet_wrap(~ Treatment, ncol = 3, scales = "free_y") +
+  ggplot2::scale_x_log10(labels = scales::label_comma()) +
+  ggplot2::scale_y_log10(labels = scales::label_comma()) +
+  ggplot2::scale_color_manual(values = my_color_palette) +
+  ggplot2::labs(
+    x       = "Total activity per active bout (a.u., log scale)",
+    y       = "Number of bouts (log scale)",
+    title   = NULL,
+    caption = "Dashed line = log-log OLS fit  |  \u03b1 = slope"
+  ) +
+  ggplot2::theme_minimal(base_size = 13) +
+  ggplot2::theme(
+    legend.position  = "none",
+    strip.text       = ggplot2::element_text(face = "bold", size = 11),
+    panel.grid.minor = ggplot2::element_blank(),
+    plot.caption     = ggplot2::element_text(size = 9, color = "gray50")
+  )
+
+print(p_powerlaw)
+cowplot::save_plot("outputs/Figure_powerlaw_day1.png", p_powerlaw,
+                   base_width = 14, base_height = 9)
+
+########## EXPORT ##########
 
 write.csv(aggregated_transitions,
-          "outputs/markov_transitions_day1.csv", row.names = FALSE)
-
+          "outputs/markov_transitions_day1.csv",  row.names = FALSE)
 write.csv(per_fly_probs,
-          "outputs/markov_per_fly_ratios_day1.csv", row.names = FALSE)
-
-cat("\nResults saved to:\n")
-cat("  - outputs/markov_transitions_day1.csv\n")
-cat("  - outputs/markov_per_fly_ratios_day1.csv\n")
-cat("  - outputs/Figure_markov_day1_v3.png\n")
+          "outputs/per_fly_transition_probs_day1.csv", row.names = FALSE)
+write.csv(powerlaw_counts,
+          "outputs/powerlaw_bout_activity_day1.csv", row.names = FALSE)
+write.csv(dplyr::select(powerlaw_fits, -fit),
+          "outputs/powerlaw_fits_day1.csv", row.names = FALSE)

@@ -1,4 +1,4 @@
-Package: immunity-fly
+Package: flies_sickness_behaviour
 Type: Package
 Title: The Title of the Project
 Version: 0.0.0.9000
@@ -10,8 +10,8 @@ Authors@R: c(
            comment = c(ORCID = "{{orcid}}")))
 Description: A paragraph providing a full description of the project (on 
     several lines...)
-URL: https://github.com/alejvcano/immunity-fly
-BugReports: https://github.com/alejvcano/immunity-fly/issues
+URL: https://github.com/alejvcano/flies_sickness_behaviour
+BugReports: https://github.com/alejvcano/flies_sickness_behaviour/issues
 License: GPL-2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

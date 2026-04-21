@@ -1,29 +1,19 @@
-########## HELPER FUNCTIONS ##########
-
-remove_trailing_zeros <- function(df) {
-  df |>
-    dplyr::group_by(FlyID) |>
-    dplyr::mutate(
-      last_nonzero = ifelse(
-        any(Activity != 0),
-        max(which(Activity != 0), na.rm = TRUE),
-        0L
-      )
-    ) |>
-    dplyr::filter(dplyr::row_number() <= last_nonzero) |>
-    dplyr::select(-last_nonzero) |>
-    dplyr::ungroup()
-}
-
 ########## DATA INPUT & PREP - HOURLY BINNING (FIRST 3 DAYS) ##########
 
 response_data_raw <- read.csv("data/flies_data.csv", sep = ";")
 key               <- read.csv("data/flies_info.csv", sep = ";")
 
-treatment_order <- c("naive", "PBS", "heatkill", "Pentomophila")
+treatment_order <- c("naive", "injured", "immune stimulated", "infected")
 my_color_palette <- stats::setNames(
   c("#0072B2", "#D55E00", "#009E73", "#CC79A7"),
   treatment_order
+)
+
+treatment_remap <- c(
+  "naive"        = "naive",
+  "PBS"          = "injured",
+  "heatkill"     = "immune stimulated",
+  "Pentomophila" = "infected"
 )
 
 MINUTES_PER_HOUR <- 60
@@ -43,7 +33,8 @@ response_data_pre <- response_data_raw |>
     key |> dplyr::select(Monitor_TubeLoc, Fly_Sex, Treatment, Status_dead0_alive1),
     by = dplyr::join_by(FlyID == Monitor_TubeLoc)
   ) |>
-  dplyr::filter(Treatment != "BLANK", Minute <= ZOOM_MINUTES) |>  # ← zoom to 3 days
+  dplyr::filter(Treatment != "BLANK", Minute <= ZOOM_MINUTES) |>
+  dplyr::mutate(Treatment = dplyr::recode(Treatment, !!!treatment_remap)) |>
   remove_trailing_zeros() |>
   dplyr::mutate(
     Treatment = factor(Treatment, levels = treatment_order),
@@ -174,7 +165,6 @@ if (nrow(low_coverage) > 0) {
 response_data_raw <- read.csv("data/flies_data.csv", sep = ";")
 key               <- read.csv("data/flies_info.csv", sep = ";")
 
-treatment_order <- c("naive", "PBS", "heatkill", "Pentomophila")
 my_color_palette <- stats::setNames(
   c("#0072B2", "#D55E00", "#009E73", "#CC79A7"),
   treatment_order
@@ -201,6 +191,7 @@ response_data_pre <- response_data_raw |>
     by = dplyr::join_by(FlyID == Monitor_TubeLoc)
   ) |>
   dplyr::filter(Treatment != "BLANK", Minute <= ZOOM_MINUTES) |>
+  dplyr::mutate(Treatment = dplyr::recode(Treatment, !!!treatment_remap)) |>
   remove_trailing_zeros() |>
   dplyr::mutate(
     Treatment = factor(Treatment, levels = treatment_order),
@@ -276,7 +267,7 @@ Fig_6h_activity <- ggplot2::ggplot(
     strip.position = "top"
   ) +
   ggplot2::labs(
-    x = "Time post infection (6-hour bins)",
+    x = "Time post-pricking (6-hour bins)",
     y = "Mean total activity per 6-hour bin (a.u.)"
   ) +
   ggplot2::scale_color_manual(values = my_color_palette) +

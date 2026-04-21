@@ -1,0 +1,1464 @@
+"Treatment","bout_totals","n_bouts"
+"naive",1,646
+"naive",2,321
+"naive",3,214
+"naive",4,228
+"naive",5,153
+"naive",6,162
+"naive",7,140
+"naive",8,166
+"naive",9,137
+"naive",10,144
+"naive",11,115
+"naive",12,89
+"naive",13,91
+"naive",14,75
+"naive",15,76
+"naive",16,74
+"naive",17,64
+"naive",18,69
+"naive",19,75
+"naive",20,77
+"naive",21,74
+"naive",22,55
+"naive",23,56
+"naive",24,41
+"naive",25,44
+"naive",26,46
+"naive",27,53
+"naive",28,46
+"naive",29,43
+"naive",30,46
+"naive",31,21
+"naive",32,44
+"naive",33,31
+"naive",34,33
+"naive",35,22
+"naive",36,30
+"naive",37,39
+"naive",38,34
+"naive",39,25
+"naive",40,32
+"naive",41,29
+"naive",42,31
+"naive",43,34
+"naive",44,27
+"naive",45,24
+"naive",46,25
+"naive",47,27
+"naive",48,23
+"naive",49,17
+"naive",50,18
+"naive",51,18
+"naive",52,21
+"naive",53,18
+"naive",54,23
+"naive",55,23
+"naive",56,25
+"naive",57,15
+"naive",58,16
+"naive",59,24
+"naive",60,20
+"naive",61,12
+"naive",62,7
+"naive",63,16
+"naive",64,19
+"naive",65,13
+"naive",66,16
+"naive",67,20
+"naive",68,15
+"naive",69,13
+"naive",70,15
+"naive",71,11
+"naive",72,9
+"naive",73,13
+"naive",74,18
+"naive",75,8
+"naive",76,9
+"naive",77,8
+"naive",78,16
+"naive",79,18
+"naive",80,10
+"naive",81,12
+"naive",82,12
+"naive",83,15
+"naive",84,17
+"naive",85,5
+"naive",86,14
+"naive",87,9
+"naive",88,11
+"naive",89,8
+"naive",90,10
+"naive",91,8
+"naive",92,7
+"naive",93,10
+"naive",94,7
+"naive",95,10
+"naive",96,4
+"naive",97,8
+"naive",98,8
+"naive",99,9
+"naive",100,9
+"naive",101,10
+"naive",102,7
+"naive",103,10
+"naive",104,9
+"naive",105,8
+"naive",106,6
+"naive",107,6
+"naive",108,6
+"naive",109,8
+"naive",110,10
+"naive",111,9
+"naive",112,4
+"naive",113,8
+"naive",114,5
+"naive",115,11
+"naive",116,6
+"naive",117,8
+"naive",118,8
+"naive",119,11
+"naive",120,7
+"naive",121,7
+"naive",122,3
+"naive",123,5
+"naive",124,10
+"naive",125,10
+"naive",126,5
+"naive",127,1
+"naive",128,5
+"naive",129,7
+"naive",130,5
+"naive",131,5
+"naive",132,7
+"naive",133,3
+"naive",134,5
+"naive",135,5
+"naive",136,4
+"naive",137,3
+"naive",138,5
+"naive",139,5
+"naive",140,5
+"naive",141,4
+"naive",142,5
+"naive",143,7
+"naive",144,2
+"naive",145,3
+"naive",146,2
+"naive",147,2
+"naive",148,2
+"naive",149,3
+"naive",150,1
+"naive",151,4
+"naive",152,7
+"naive",153,4
+"naive",154,4
+"naive",155,3
+"naive",156,3
+"naive",158,4
+"naive",159,3
+"naive",160,3
+"naive",162,4
+"naive",163,1
+"naive",164,2
+"naive",165,2
+"naive",166,1
+"naive",167,1
+"naive",168,3
+"naive",169,6
+"naive",170,1
+"naive",171,4
+"naive",172,3
+"naive",173,3
+"naive",174,9
+"naive",175,3
+"naive",176,4
+"naive",177,1
+"naive",178,2
+"naive",179,3
+"naive",181,4
+"naive",183,1
+"naive",184,2
+"naive",185,2
+"naive",186,3
+"naive",187,1
+"naive",188,1
+"naive",189,5
+"naive",190,1
+"naive",191,1
+"naive",192,3
+"naive",193,4
+"naive",194,1
+"naive",195,1
+"naive",196,4
+"naive",197,1
+"naive",198,1
+"naive",199,1
+"naive",200,1
+"naive",201,5
+"naive",202,1
+"naive",203,3
+"naive",204,2
+"naive",206,2
+"naive",207,1
+"naive",208,4
+"naive",210,3
+"naive",211,1
+"naive",212,2
+"naive",213,3
+"naive",214,2
+"naive",215,3
+"naive",216,2
+"naive",217,1
+"naive",218,2
+"naive",219,1
+"naive",220,1
+"naive",222,3
+"naive",223,1
+"naive",224,1
+"naive",225,1
+"naive",227,5
+"naive",228,2
+"naive",229,3
+"naive",232,1
+"naive",233,2
+"naive",234,2
+"naive",235,4
+"naive",236,1
+"naive",238,2
+"naive",239,2
+"naive",240,1
+"naive",241,1
+"naive",242,3
+"naive",243,2
+"naive",244,2
+"naive",246,2
+"naive",247,2
+"naive",248,1
+"naive",249,1
+"naive",250,1
+"naive",251,1
+"naive",252,2
+"naive",253,4
+"naive",254,1
+"naive",257,2
+"naive",258,2
+"naive",259,2
+"naive",260,1
+"naive",261,1
+"naive",263,2
+"naive",264,1
+"naive",265,2
+"naive",266,2
+"naive",268,1
+"naive",270,4
+"naive",271,3
+"naive",272,1
+"naive",273,3
+"naive",274,2
+"naive",275,3
+"naive",277,2
+"naive",278,2
+"naive",281,1
+"naive",282,1
+"naive",284,1
+"naive",285,1
+"naive",286,1
+"naive",287,1
+"naive",288,1
+"naive",290,1
+"naive",292,1
+"naive",296,1
+"naive",297,1
+"naive",298,1
+"naive",300,2
+"naive",302,1
+"naive",306,2
+"naive",312,1
+"naive",314,1
+"naive",315,2
+"naive",319,1
+"naive",320,1
+"naive",322,1
+"naive",323,1
+"naive",324,1
+"naive",327,1
+"naive",328,1
+"naive",329,1
+"naive",331,2
+"naive",336,1
+"naive",338,1
+"naive",340,1
+"naive",342,1
+"naive",349,1
+"naive",357,1
+"naive",358,1
+"naive",364,1
+"naive",365,2
+"naive",368,1
+"naive",369,1
+"naive",370,2
+"naive",372,1
+"naive",374,2
+"naive",376,1
+"naive",378,1
+"naive",381,3
+"naive",382,1
+"naive",384,1
+"naive",385,1
+"naive",389,1
+"naive",391,1
+"naive",392,1
+"naive",393,2
+"naive",395,1
+"naive",396,2
+"naive",400,2
+"naive",401,1
+"naive",402,2
+"naive",403,2
+"naive",404,1
+"naive",407,1
+"naive",413,3
+"naive",416,1
+"naive",419,1
+"naive",425,1
+"naive",426,1
+"naive",430,1
+"naive",431,1
+"naive",432,1
+"naive",435,1
+"naive",436,2
+"naive",438,3
+"naive",439,1
+"naive",441,2
+"naive",442,1
+"naive",443,1
+"naive",449,1
+"naive",454,2
+"naive",455,1
+"naive",458,1
+"naive",459,1
+"naive",465,1
+"naive",466,2
+"naive",467,1
+"naive",469,1
+"naive",470,1
+"naive",474,1
+"naive",482,1
+"naive",483,1
+"naive",485,1
+"naive",489,1
+"naive",494,1
+"naive",499,1
+"naive",500,1
+"naive",517,1
+"naive",518,1
+"naive",519,1
+"naive",523,1
+"naive",525,1
+"naive",528,1
+"naive",529,1
+"naive",530,1
+"naive",531,1
+"naive",537,1
+"naive",539,1
+"naive",541,1
+"naive",542,1
+"naive",549,1
+"naive",553,1
+"naive",557,1
+"naive",561,1
+"naive",564,1
+"naive",570,1
+"naive",578,1
+"naive",580,1
+"naive",582,1
+"naive",584,1
+"naive",587,1
+"naive",589,1
+"naive",590,1
+"naive",598,1
+"naive",601,1
+"naive",602,2
+"naive",610,1
+"naive",619,1
+"naive",620,1
+"naive",623,1
+"naive",632,1
+"naive",634,1
+"naive",639,1
+"naive",640,1
+"naive",649,1
+"naive",650,1
+"naive",654,1
+"naive",660,1
+"naive",664,1
+"naive",671,1
+"naive",675,1
+"naive",678,1
+"naive",682,1
+"naive",691,1
+"naive",692,1
+"naive",693,1
+"naive",703,1
+"naive",724,1
+"naive",727,1
+"naive",732,1
+"naive",735,1
+"naive",737,1
+"naive",740,1
+"naive",750,1
+"naive",753,1
+"naive",771,1
+"naive",787,2
+"naive",805,1
+"naive",812,1
+"naive",825,1
+"naive",844,1
+"naive",848,1
+"naive",859,1
+"naive",867,1
+"naive",868,1
+"naive",877,1
+"naive",890,1
+"naive",897,1
+"naive",917,1
+"naive",936,1
+"naive",955,1
+"naive",966,1
+"naive",986,1
+"naive",999,1
+"naive",1027,1
+"naive",1072,1
+"naive",1126,1
+"naive",1138,1
+"naive",1196,1
+"naive",1256,1
+"naive",1296,1
+"naive",1357,1
+"naive",1437,1
+"naive",1629,1
+"naive",1840,1
+"naive",2037,1
+"naive",2089,1
+"naive",2132,1
+"naive",2160,1
+"naive",2583,1
+"naive",3576,1
+"naive",25840,1
+"injured",1,500
+"injured",2,274
+"injured",3,170
+"injured",4,153
+"injured",5,129
+"injured",6,134
+"injured",7,131
+"injured",8,134
+"injured",9,127
+"injured",10,122
+"injured",11,79
+"injured",12,99
+"injured",13,105
+"injured",14,85
+"injured",15,63
+"injured",16,74
+"injured",17,70
+"injured",18,63
+"injured",19,62
+"injured",20,54
+"injured",21,49
+"injured",22,36
+"injured",23,42
+"injured",24,42
+"injured",25,49
+"injured",26,48
+"injured",27,49
+"injured",28,46
+"injured",29,31
+"injured",30,34
+"injured",31,23
+"injured",32,20
+"injured",33,34
+"injured",34,33
+"injured",35,27
+"injured",36,27
+"injured",37,32
+"injured",38,23
+"injured",39,22
+"injured",40,35
+"injured",41,23
+"injured",42,17
+"injured",43,17
+"injured",44,22
+"injured",45,20
+"injured",46,19
+"injured",47,20
+"injured",48,10
+"injured",49,17
+"injured",50,14
+"injured",51,15
+"injured",52,20
+"injured",53,31
+"injured",54,19
+"injured",55,19
+"injured",56,16
+"injured",57,13
+"injured",58,21
+"injured",59,14
+"injured",60,14
+"injured",61,11
+"injured",62,14
+"injured",63,9
+"injured",64,13
+"injured",65,7
+"injured",66,10
+"injured",67,7
+"injured",68,13
+"injured",69,7
+"injured",70,11
+"injured",71,11
+"injured",72,17
+"injured",73,8
+"injured",74,8
+"injured",75,10
+"injured",76,11
+"injured",77,5
+"injured",78,5
+"injured",79,8
+"injured",80,8
+"injured",81,6
+"injured",82,6
+"injured",83,8
+"injured",84,6
+"injured",85,5
+"injured",86,6
+"injured",87,8
+"injured",88,6
+"injured",89,10
+"injured",90,11
+"injured",91,14
+"injured",92,7
+"injured",93,9
+"injured",94,8
+"injured",95,4
+"injured",96,5
+"injured",97,2
+"injured",98,6
+"injured",99,10
+"injured",100,4
+"injured",101,5
+"injured",102,4
+"injured",103,8
+"injured",104,3
+"injured",105,4
+"injured",106,4
+"injured",107,6
+"injured",108,5
+"injured",109,2
+"injured",110,3
+"injured",111,3
+"injured",112,4
+"injured",113,5
+"injured",114,3
+"injured",115,5
+"injured",116,6
+"injured",117,6
+"injured",118,3
+"injured",119,6
+"injured",120,7
+"injured",121,1
+"injured",122,5
+"injured",123,2
+"injured",124,1
+"injured",125,1
+"injured",126,2
+"injured",127,1
+"injured",128,1
+"injured",129,4
+"injured",130,2
+"injured",131,2
+"injured",132,2
+"injured",133,1
+"injured",134,4
+"injured",136,4
+"injured",137,2
+"injured",139,5
+"injured",140,3
+"injured",141,4
+"injured",142,3
+"injured",143,2
+"injured",144,2
+"injured",145,1
+"injured",146,2
+"injured",147,2
+"injured",148,2
+"injured",149,2
+"injured",150,4
+"injured",151,6
+"injured",152,1
+"injured",153,2
+"injured",154,5
+"injured",155,3
+"injured",156,1
+"injured",157,2
+"injured",158,1
+"injured",159,3
+"injured",161,1
+"injured",162,1
+"injured",163,3
+"injured",164,1
+"injured",166,3
+"injured",167,2
+"injured",170,5
+"injured",171,1
+"injured",172,2
+"injured",173,1
+"injured",174,1
+"injured",176,3
+"injured",177,1
+"injured",181,4
+"injured",183,1
+"injured",184,2
+"injured",187,3
+"injured",188,1
+"injured",190,2
+"injured",191,3
+"injured",192,1
+"injured",193,1
+"injured",195,1
+"injured",196,1
+"injured",197,1
+"injured",198,2
+"injured",201,2
+"injured",206,2
+"injured",208,3
+"injured",211,2
+"injured",212,2
+"injured",214,1
+"injured",216,2
+"injured",217,1
+"injured",218,3
+"injured",223,2
+"injured",224,2
+"injured",230,1
+"injured",231,2
+"injured",234,1
+"injured",235,2
+"injured",237,1
+"injured",240,1
+"injured",241,1
+"injured",242,1
+"injured",244,2
+"injured",245,1
+"injured",256,1
+"injured",259,1
+"injured",263,2
+"injured",265,1
+"injured",268,2
+"injured",269,1
+"injured",273,1
+"injured",280,2
+"injured",290,1
+"injured",292,1
+"injured",295,1
+"injured",296,1
+"injured",301,1
+"injured",302,1
+"injured",308,1
+"injured",311,1
+"injured",312,1
+"injured",313,1
+"injured",320,1
+"injured",321,1
+"injured",329,1
+"injured",333,1
+"injured",336,1
+"injured",339,1
+"injured",340,1
+"injured",342,1
+"injured",343,1
+"injured",345,1
+"injured",355,1
+"injured",359,1
+"injured",375,2
+"injured",379,2
+"injured",381,1
+"injured",384,1
+"injured",392,1
+"injured",393,1
+"injured",394,2
+"injured",396,1
+"injured",399,2
+"injured",411,1
+"injured",414,1
+"injured",417,1
+"injured",418,1
+"injured",421,1
+"injured",423,1
+"injured",427,1
+"injured",435,1
+"injured",445,1
+"injured",447,1
+"injured",455,1
+"injured",457,1
+"injured",464,1
+"injured",467,1
+"injured",498,1
+"injured",510,1
+"injured",519,1
+"injured",526,1
+"injured",536,1
+"injured",541,1
+"injured",542,1
+"injured",551,1
+"injured",556,1
+"injured",568,1
+"injured",571,1
+"injured",578,1
+"injured",586,1
+"injured",589,1
+"injured",650,1
+"injured",652,1
+"injured",658,1
+"injured",680,1
+"injured",754,1
+"injured",835,1
+"injured",838,1
+"injured",845,1
+"injured",921,1
+"injured",973,1
+"injured",1151,1
+"injured",1340,1
+"injured",1501,1
+"injured",1504,1
+"injured",1675,1
+"injured",1862,1
+"injured",2586,1
+"injured",3185,1
+"injured",3251,1
+"injured",4319,1
+"injured",4877,1
+"immune stimulated",1,505
+"immune stimulated",2,279
+"immune stimulated",3,215
+"immune stimulated",4,229
+"immune stimulated",5,187
+"immune stimulated",6,137
+"immune stimulated",7,128
+"immune stimulated",8,168
+"immune stimulated",9,150
+"immune stimulated",10,132
+"immune stimulated",11,108
+"immune stimulated",12,100
+"immune stimulated",13,94
+"immune stimulated",14,88
+"immune stimulated",15,81
+"immune stimulated",16,85
+"immune stimulated",17,75
+"immune stimulated",18,69
+"immune stimulated",19,75
+"immune stimulated",20,55
+"immune stimulated",21,70
+"immune stimulated",22,42
+"immune stimulated",23,44
+"immune stimulated",24,45
+"immune stimulated",25,52
+"immune stimulated",26,43
+"immune stimulated",27,47
+"immune stimulated",28,35
+"immune stimulated",29,40
+"immune stimulated",30,36
+"immune stimulated",31,30
+"immune stimulated",32,28
+"immune stimulated",33,36
+"immune stimulated",34,28
+"immune stimulated",35,25
+"immune stimulated",36,29
+"immune stimulated",37,30
+"immune stimulated",38,28
+"immune stimulated",39,20
+"immune stimulated",40,28
+"immune stimulated",41,21
+"immune stimulated",42,29
+"immune stimulated",43,21
+"immune stimulated",44,20
+"immune stimulated",45,17
+"immune stimulated",46,17
+"immune stimulated",47,14
+"immune stimulated",48,19
+"immune stimulated",49,18
+"immune stimulated",50,11
+"immune stimulated",51,18
+"immune stimulated",52,23
+"immune stimulated",53,13
+"immune stimulated",54,18
+"immune stimulated",55,19
+"immune stimulated",56,15
+"immune stimulated",57,17
+"immune stimulated",58,4
+"immune stimulated",59,9
+"immune stimulated",60,10
+"immune stimulated",61,8
+"immune stimulated",62,11
+"immune stimulated",63,18
+"immune stimulated",64,7
+"immune stimulated",65,12
+"immune stimulated",66,5
+"immune stimulated",67,5
+"immune stimulated",68,12
+"immune stimulated",69,11
+"immune stimulated",70,8
+"immune stimulated",71,10
+"immune stimulated",72,8
+"immune stimulated",73,10
+"immune stimulated",74,5
+"immune stimulated",75,8
+"immune stimulated",76,8
+"immune stimulated",77,8
+"immune stimulated",78,5
+"immune stimulated",79,7
+"immune stimulated",80,11
+"immune stimulated",81,2
+"immune stimulated",82,4
+"immune stimulated",83,5
+"immune stimulated",84,9
+"immune stimulated",85,11
+"immune stimulated",86,7
+"immune stimulated",87,1
+"immune stimulated",88,1
+"immune stimulated",89,7
+"immune stimulated",90,6
+"immune stimulated",91,5
+"immune stimulated",92,6
+"immune stimulated",93,3
+"immune stimulated",94,7
+"immune stimulated",95,2
+"immune stimulated",96,6
+"immune stimulated",97,7
+"immune stimulated",98,4
+"immune stimulated",99,9
+"immune stimulated",100,4
+"immune stimulated",101,4
+"immune stimulated",102,8
+"immune stimulated",103,7
+"immune stimulated",104,3
+"immune stimulated",105,4
+"immune stimulated",106,6
+"immune stimulated",107,5
+"immune stimulated",108,2
+"immune stimulated",109,3
+"immune stimulated",110,4
+"immune stimulated",111,4
+"immune stimulated",112,6
+"immune stimulated",113,3
+"immune stimulated",114,1
+"immune stimulated",115,5
+"immune stimulated",116,6
+"immune stimulated",117,2
+"immune stimulated",118,1
+"immune stimulated",119,5
+"immune stimulated",120,1
+"immune stimulated",121,1
+"immune stimulated",122,1
+"immune stimulated",123,3
+"immune stimulated",124,2
+"immune stimulated",125,1
+"immune stimulated",126,1
+"immune stimulated",127,1
+"immune stimulated",128,1
+"immune stimulated",129,3
+"immune stimulated",130,1
+"immune stimulated",131,3
+"immune stimulated",133,5
+"immune stimulated",134,2
+"immune stimulated",135,3
+"immune stimulated",136,2
+"immune stimulated",137,4
+"immune stimulated",138,2
+"immune stimulated",139,2
+"immune stimulated",140,2
+"immune stimulated",141,6
+"immune stimulated",142,3
+"immune stimulated",143,4
+"immune stimulated",144,1
+"immune stimulated",145,1
+"immune stimulated",146,1
+"immune stimulated",147,2
+"immune stimulated",148,2
+"immune stimulated",149,3
+"immune stimulated",150,1
+"immune stimulated",151,1
+"immune stimulated",152,4
+"immune stimulated",153,1
+"immune stimulated",154,2
+"immune stimulated",155,1
+"immune stimulated",156,1
+"immune stimulated",158,2
+"immune stimulated",159,1
+"immune stimulated",160,1
+"immune stimulated",161,3
+"immune stimulated",162,1
+"immune stimulated",164,3
+"immune stimulated",165,1
+"immune stimulated",166,1
+"immune stimulated",168,1
+"immune stimulated",169,1
+"immune stimulated",171,2
+"immune stimulated",174,2
+"immune stimulated",175,2
+"immune stimulated",176,1
+"immune stimulated",178,2
+"immune stimulated",179,1
+"immune stimulated",180,1
+"immune stimulated",181,1
+"immune stimulated",183,2
+"immune stimulated",184,1
+"immune stimulated",185,1
+"immune stimulated",186,3
+"immune stimulated",187,1
+"immune stimulated",189,1
+"immune stimulated",190,4
+"immune stimulated",191,1
+"immune stimulated",193,2
+"immune stimulated",194,1
+"immune stimulated",195,1
+"immune stimulated",197,4
+"immune stimulated",198,1
+"immune stimulated",199,1
+"immune stimulated",200,1
+"immune stimulated",201,1
+"immune stimulated",202,1
+"immune stimulated",204,2
+"immune stimulated",206,1
+"immune stimulated",207,2
+"immune stimulated",209,1
+"immune stimulated",210,2
+"immune stimulated",212,1
+"immune stimulated",213,1
+"immune stimulated",214,2
+"immune stimulated",215,1
+"immune stimulated",218,1
+"immune stimulated",220,3
+"immune stimulated",221,3
+"immune stimulated",222,1
+"immune stimulated",223,4
+"immune stimulated",226,2
+"immune stimulated",227,1
+"immune stimulated",228,1
+"immune stimulated",233,2
+"immune stimulated",237,2
+"immune stimulated",239,1
+"immune stimulated",240,1
+"immune stimulated",241,2
+"immune stimulated",242,2
+"immune stimulated",243,1
+"immune stimulated",245,2
+"immune stimulated",248,1
+"immune stimulated",249,2
+"immune stimulated",252,1
+"immune stimulated",253,1
+"immune stimulated",255,3
+"immune stimulated",256,1
+"immune stimulated",257,1
+"immune stimulated",259,1
+"immune stimulated",261,1
+"immune stimulated",262,1
+"immune stimulated",268,1
+"immune stimulated",269,1
+"immune stimulated",274,1
+"immune stimulated",281,1
+"immune stimulated",288,1
+"immune stimulated",291,1
+"immune stimulated",292,1
+"immune stimulated",293,2
+"immune stimulated",295,1
+"immune stimulated",300,1
+"immune stimulated",303,1
+"immune stimulated",306,1
+"immune stimulated",311,1
+"immune stimulated",313,1
+"immune stimulated",316,1
+"immune stimulated",317,1
+"immune stimulated",318,1
+"immune stimulated",320,1
+"immune stimulated",321,1
+"immune stimulated",325,1
+"immune stimulated",326,1
+"immune stimulated",331,1
+"immune stimulated",333,1
+"immune stimulated",334,1
+"immune stimulated",357,1
+"immune stimulated",364,1
+"immune stimulated",365,1
+"immune stimulated",368,1
+"immune stimulated",372,1
+"immune stimulated",375,1
+"immune stimulated",381,2
+"immune stimulated",387,2
+"immune stimulated",388,1
+"immune stimulated",393,2
+"immune stimulated",397,1
+"immune stimulated",399,1
+"immune stimulated",403,1
+"immune stimulated",405,1
+"immune stimulated",418,1
+"immune stimulated",421,1
+"immune stimulated",429,2
+"immune stimulated",431,1
+"immune stimulated",436,1
+"immune stimulated",443,1
+"immune stimulated",445,1
+"immune stimulated",446,1
+"immune stimulated",447,1
+"immune stimulated",449,1
+"immune stimulated",484,1
+"immune stimulated",492,1
+"immune stimulated",506,1
+"immune stimulated",509,1
+"immune stimulated",556,1
+"immune stimulated",558,2
+"immune stimulated",573,1
+"immune stimulated",578,1
+"immune stimulated",580,1
+"immune stimulated",640,1
+"immune stimulated",649,1
+"immune stimulated",671,1
+"immune stimulated",682,1
+"immune stimulated",728,1
+"immune stimulated",734,1
+"immune stimulated",736,1
+"immune stimulated",754,1
+"immune stimulated",802,1
+"immune stimulated",804,1
+"immune stimulated",815,1
+"immune stimulated",994,1
+"immune stimulated",1046,1
+"immune stimulated",1157,1
+"immune stimulated",1225,1
+"immune stimulated",1535,1
+"immune stimulated",2638,1
+"immune stimulated",2677,1
+"immune stimulated",3520,1
+"immune stimulated",4222,1
+"infected (acute)",1,128
+"infected (acute)",2,54
+"infected (acute)",3,45
+"infected (acute)",4,48
+"infected (acute)",5,40
+"infected (acute)",6,24
+"infected (acute)",7,27
+"infected (acute)",8,22
+"infected (acute)",9,22
+"infected (acute)",10,18
+"infected (acute)",11,17
+"infected (acute)",12,15
+"infected (acute)",13,11
+"infected (acute)",14,13
+"infected (acute)",15,15
+"infected (acute)",16,12
+"infected (acute)",17,11
+"infected (acute)",18,11
+"infected (acute)",19,7
+"infected (acute)",20,14
+"infected (acute)",21,12
+"infected (acute)",22,8
+"infected (acute)",23,6
+"infected (acute)",24,6
+"infected (acute)",25,7
+"infected (acute)",26,2
+"infected (acute)",27,8
+"infected (acute)",28,5
+"infected (acute)",29,3
+"infected (acute)",30,6
+"infected (acute)",31,5
+"infected (acute)",32,4
+"infected (acute)",33,10
+"infected (acute)",34,6
+"infected (acute)",35,8
+"infected (acute)",36,2
+"infected (acute)",37,9
+"infected (acute)",38,9
+"infected (acute)",39,3
+"infected (acute)",40,7
+"infected (acute)",41,7
+"infected (acute)",42,3
+"infected (acute)",43,5
+"infected (acute)",44,3
+"infected (acute)",45,3
+"infected (acute)",46,1
+"infected (acute)",47,2
+"infected (acute)",48,3
+"infected (acute)",49,3
+"infected (acute)",50,2
+"infected (acute)",51,1
+"infected (acute)",52,1
+"infected (acute)",53,2
+"infected (acute)",54,2
+"infected (acute)",55,2
+"infected (acute)",56,2
+"infected (acute)",57,2
+"infected (acute)",58,3
+"infected (acute)",60,1
+"infected (acute)",61,3
+"infected (acute)",62,1
+"infected (acute)",63,1
+"infected (acute)",64,1
+"infected (acute)",65,2
+"infected (acute)",66,1
+"infected (acute)",67,1
+"infected (acute)",68,2
+"infected (acute)",69,1
+"infected (acute)",70,3
+"infected (acute)",71,4
+"infected (acute)",72,1
+"infected (acute)",73,2
+"infected (acute)",74,1
+"infected (acute)",75,1
+"infected (acute)",77,3
+"infected (acute)",80,2
+"infected (acute)",83,1
+"infected (acute)",86,3
+"infected (acute)",87,2
+"infected (acute)",88,1
+"infected (acute)",89,2
+"infected (acute)",93,2
+"infected (acute)",95,1
+"infected (acute)",96,2
+"infected (acute)",97,1
+"infected (acute)",98,1
+"infected (acute)",105,3
+"infected (acute)",106,2
+"infected (acute)",111,1
+"infected (acute)",112,2
+"infected (acute)",116,2
+"infected (acute)",118,1
+"infected (acute)",121,1
+"infected (acute)",124,1
+"infected (acute)",125,1
+"infected (acute)",129,3
+"infected (acute)",131,1
+"infected (acute)",133,1
+"infected (acute)",134,1
+"infected (acute)",135,1
+"infected (acute)",136,1
+"infected (acute)",137,1
+"infected (acute)",146,2
+"infected (acute)",148,1
+"infected (acute)",162,1
+"infected (acute)",163,1
+"infected (acute)",164,1
+"infected (acute)",165,1
+"infected (acute)",169,1
+"infected (acute)",185,1
+"infected (acute)",187,1
+"infected (acute)",190,1
+"infected (acute)",199,1
+"infected (acute)",202,1
+"infected (acute)",203,1
+"infected (acute)",208,1
+"infected (acute)",212,1
+"infected (acute)",215,1
+"infected (acute)",219,1
+"infected (acute)",222,1
+"infected (acute)",223,1
+"infected (acute)",228,1
+"infected (acute)",256,1
+"infected (acute)",261,1
+"infected (acute)",267,1
+"infected (acute)",290,2
+"infected (acute)",307,1
+"infected (acute)",315,1
+"infected (acute)",379,1
+"infected (acute)",413,1
+"infected (acute)",438,1
+"infected (chronic)",1,409
+"infected (chronic)",2,234
+"infected (chronic)",3,162
+"infected (chronic)",4,185
+"infected (chronic)",5,143
+"infected (chronic)",6,126
+"infected (chronic)",7,109
+"infected (chronic)",8,140
+"infected (chronic)",9,130
+"infected (chronic)",10,106
+"infected (chronic)",11,96
+"infected (chronic)",12,80
+"infected (chronic)",13,62
+"infected (chronic)",14,55
+"infected (chronic)",15,57
+"infected (chronic)",16,64
+"infected (chronic)",17,54
+"infected (chronic)",18,46
+"infected (chronic)",19,39
+"infected (chronic)",20,26
+"infected (chronic)",21,30
+"infected (chronic)",22,32
+"infected (chronic)",23,36
+"infected (chronic)",24,35
+"infected (chronic)",25,27
+"infected (chronic)",26,26
+"infected (chronic)",27,32
+"infected (chronic)",28,32
+"infected (chronic)",29,18
+"infected (chronic)",30,18
+"infected (chronic)",31,25
+"infected (chronic)",32,27
+"infected (chronic)",33,32
+"infected (chronic)",34,21
+"infected (chronic)",35,15
+"infected (chronic)",36,20
+"infected (chronic)",37,18
+"infected (chronic)",38,17
+"infected (chronic)",39,20
+"infected (chronic)",40,14
+"infected (chronic)",41,12
+"infected (chronic)",42,19
+"infected (chronic)",43,16
+"infected (chronic)",44,12
+"infected (chronic)",45,20
+"infected (chronic)",46,17
+"infected (chronic)",47,17
+"infected (chronic)",48,19
+"infected (chronic)",49,11
+"infected (chronic)",50,10
+"infected (chronic)",51,12
+"infected (chronic)",52,11
+"infected (chronic)",53,12
+"infected (chronic)",54,13
+"infected (chronic)",55,13
+"infected (chronic)",56,9
+"infected (chronic)",57,16
+"infected (chronic)",58,16
+"infected (chronic)",59,11
+"infected (chronic)",60,10
+"infected (chronic)",61,8
+"infected (chronic)",62,12
+"infected (chronic)",63,9
+"infected (chronic)",64,5
+"infected (chronic)",65,8
+"infected (chronic)",66,10
+"infected (chronic)",67,12
+"infected (chronic)",68,8
+"infected (chronic)",69,2
+"infected (chronic)",70,5
+"infected (chronic)",71,13
+"infected (chronic)",72,8
+"infected (chronic)",73,6
+"infected (chronic)",74,9
+"infected (chronic)",75,9
+"infected (chronic)",76,5
+"infected (chronic)",77,6
+"infected (chronic)",78,7
+"infected (chronic)",79,3
+"infected (chronic)",80,8
+"infected (chronic)",81,9
+"infected (chronic)",82,5
+"infected (chronic)",83,5
+"infected (chronic)",84,7
+"infected (chronic)",85,6
+"infected (chronic)",86,4
+"infected (chronic)",87,6
+"infected (chronic)",88,8
+"infected (chronic)",89,5
+"infected (chronic)",90,2
+"infected (chronic)",91,6
+"infected (chronic)",92,7
+"infected (chronic)",93,6
+"infected (chronic)",94,4
+"infected (chronic)",95,4
+"infected (chronic)",96,7
+"infected (chronic)",97,3
+"infected (chronic)",98,3
+"infected (chronic)",99,8
+"infected (chronic)",100,6
+"infected (chronic)",101,10
+"infected (chronic)",102,6
+"infected (chronic)",103,3
+"infected (chronic)",104,7
+"infected (chronic)",105,3
+"infected (chronic)",106,1
+"infected (chronic)",107,5
+"infected (chronic)",108,4
+"infected (chronic)",109,3
+"infected (chronic)",110,4
+"infected (chronic)",112,6
+"infected (chronic)",113,6
+"infected (chronic)",114,4
+"infected (chronic)",115,1
+"infected (chronic)",116,2
+"infected (chronic)",117,2
+"infected (chronic)",118,6
+"infected (chronic)",119,3
+"infected (chronic)",120,3
+"infected (chronic)",121,5
+"infected (chronic)",122,2
+"infected (chronic)",123,3
+"infected (chronic)",124,4
+"infected (chronic)",125,3
+"infected (chronic)",126,2
+"infected (chronic)",127,1
+"infected (chronic)",128,1
+"infected (chronic)",129,3
+"infected (chronic)",130,1
+"infected (chronic)",131,4
+"infected (chronic)",132,4
+"infected (chronic)",133,4
+"infected (chronic)",134,2
+"infected (chronic)",135,4
+"infected (chronic)",136,1
+"infected (chronic)",137,1
+"infected (chronic)",138,1
+"infected (chronic)",139,2
+"infected (chronic)",140,3
+"infected (chronic)",141,4
+"infected (chronic)",142,1
+"infected (chronic)",143,2
+"infected (chronic)",144,3
+"infected (chronic)",145,3
+"infected (chronic)",146,3
+"infected (chronic)",147,3
+"infected (chronic)",148,3
+"infected (chronic)",149,3
+"infected (chronic)",150,1
+"infected (chronic)",151,2
+"infected (chronic)",152,1
+"infected (chronic)",153,1
+"infected (chronic)",154,3
+"infected (chronic)",155,4
+"infected (chronic)",156,3
+"infected (chronic)",157,1
+"infected (chronic)",158,2
+"infected (chronic)",159,2
+"infected (chronic)",160,1
+"infected (chronic)",161,1
+"infected (chronic)",162,1
+"infected (chronic)",164,2
+"infected (chronic)",166,4
+"infected (chronic)",167,1
+"infected (chronic)",168,1
+"infected (chronic)",169,1
+"infected (chronic)",171,1
+"infected (chronic)",173,1
+"infected (chronic)",176,3
+"infected (chronic)",177,3
+"infected (chronic)",178,1
+"infected (chronic)",180,2
+"infected (chronic)",181,2
+"infected (chronic)",183,1
+"infected (chronic)",184,2
+"infected (chronic)",185,3
+"infected (chronic)",186,3
+"infected (chronic)",188,2
+"infected (chronic)",189,1
+"infected (chronic)",190,1
+"infected (chronic)",191,3
+"infected (chronic)",192,1
+"infected (chronic)",193,4
+"infected (chronic)",194,2
+"infected (chronic)",195,1
+"infected (chronic)",196,1
+"infected (chronic)",197,1
+"infected (chronic)",198,2
+"infected (chronic)",199,1
+"infected (chronic)",200,2
+"infected (chronic)",201,1
+"infected (chronic)",203,1
+"infected (chronic)",204,2
+"infected (chronic)",205,2
+"infected (chronic)",206,1
+"infected (chronic)",207,1
+"infected (chronic)",208,1
+"infected (chronic)",210,1
+"infected (chronic)",213,1
+"infected (chronic)",214,4
+"infected (chronic)",215,2
+"infected (chronic)",219,1
+"infected (chronic)",221,1
+"infected (chronic)",223,2
+"infected (chronic)",227,1
+"infected (chronic)",230,1
+"infected (chronic)",232,2
+"infected (chronic)",235,1
+"infected (chronic)",236,1
+"infected (chronic)",238,2
+"infected (chronic)",239,1
+"infected (chronic)",244,1
+"infected (chronic)",257,1
+"infected (chronic)",259,2
+"infected (chronic)",264,2
+"infected (chronic)",266,1
+"infected (chronic)",268,3
+"infected (chronic)",270,1
+"infected (chronic)",271,1
+"infected (chronic)",273,1
+"infected (chronic)",274,4
+"infected (chronic)",276,1
+"infected (chronic)",277,1
+"infected (chronic)",280,1
+"infected (chronic)",281,2
+"infected (chronic)",283,1
+"infected (chronic)",285,1
+"infected (chronic)",290,1
+"infected (chronic)",295,1
+"infected (chronic)",298,1
+"infected (chronic)",299,1
+"infected (chronic)",300,1
+"infected (chronic)",301,1
+"infected (chronic)",304,1
+"infected (chronic)",305,1
+"infected (chronic)",308,1
+"infected (chronic)",310,1
+"infected (chronic)",312,1
+"infected (chronic)",321,1
+"infected (chronic)",330,1
+"infected (chronic)",331,1
+"infected (chronic)",332,1
+"infected (chronic)",333,1
+"infected (chronic)",338,1
+"infected (chronic)",344,1
+"infected (chronic)",345,1
+"infected (chronic)",349,1
+"infected (chronic)",354,1
+"infected (chronic)",356,1
+"infected (chronic)",363,1
+"infected (chronic)",367,1
+"infected (chronic)",369,1
+"infected (chronic)",370,1
+"infected (chronic)",373,1
+"infected (chronic)",374,1
+"infected (chronic)",378,1
+"infected (chronic)",383,1
+"infected (chronic)",399,1
+"infected (chronic)",409,1
+"infected (chronic)",418,2
+"infected (chronic)",420,1
+"infected (chronic)",422,1
+"infected (chronic)",461,1
+"infected (chronic)",462,1
+"infected (chronic)",467,1
+"infected (chronic)",488,1
+"infected (chronic)",489,1
+"infected (chronic)",495,2
+"infected (chronic)",540,1
+"infected (chronic)",543,1
+"infected (chronic)",554,1
+"infected (chronic)",589,1
+"infected (chronic)",594,1
+"infected (chronic)",609,1
+"infected (chronic)",621,1
+"infected (chronic)",635,1
+"infected (chronic)",636,1
+"infected (chronic)",646,1
+"infected (chronic)",652,1
+"infected (chronic)",660,2
+"infected (chronic)",667,1
+"infected (chronic)",694,1
+"infected (chronic)",737,1
+"infected (chronic)",822,1
+"infected (chronic)",827,1
+"infected (chronic)",861,1
+"infected (chronic)",890,1
+"infected (chronic)",1022,1
+"infected (chronic)",1255,1
+"infected (chronic)",1343,1
+"infected (chronic)",1567,1

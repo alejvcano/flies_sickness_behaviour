@@ -20,9 +20,10 @@ remove_trailing_zeros <- function(df) {
 response_data_raw <- read.csv("data/flies_data.csv", sep = ";")
 key               <- read.csv("data/flies_info.csv", sep = ";")
 
-treatment_order  <- c("PentomophilaA", "PentomophilaB")
+treatment_order <- c("naive", "infected (acute)", "infected (chronic)")
+
 my_color_palette <- stats::setNames(
-  c("#CC79A7", "#E69F00"),
+  c("#0072B2", "#CC79A7", "#E69F00"),
   treatment_order
 )
 
@@ -30,6 +31,7 @@ MINUTES_PER_HOUR <- 60
 WINDOW_HOURS     <- 6
 WINDOW_MINUTES   <- WINDOW_HOURS * MINUTES_PER_HOUR
 ZOOM_MINUTES     <- 3 * 24 * 60
+PENTO_THRESHOLD  <- 12000
 
 # ── Step 1: compute Last_mov from RAW data (before any trimming) ──
 last_mov_raw <- response_data_raw |>
@@ -41,20 +43,15 @@ last_mov_raw <- response_data_raw |>
   dplyr::mutate(FlyID = stringr::str_remove(FlyID, "^.")) |>
   dplyr::group_by(FlyID) |>
   dplyr::summarise(
-    Last_mov = ifelse(
-      any(Activity != 0),
-      max(which(Activity != 0)),
-      0L
-    ),
-    .groups = "drop"
+    Last_mov = ifelse(any(Activity != 0), max(which(Activity != 0)), 0L),
+    .groups  = "drop"
   )
 
-cat("Last_mov distribution for Pentomophila flies:\n")
-print(summary(last_mov_raw$Last_mov))
-cat("Flies with Last_mov < 200:", sum(last_mov_raw$Last_mov < 200), "\n")
-cat("Flies with Last_mov >= 200:", sum(last_mov_raw$Last_mov >= 200), "\n")
+cat("Last_mov summary:\n"); print(summary(last_mov_raw$Last_mov))
+cat("infected (acute)  (< ", PENTO_THRESHOLD, "):", sum(last_mov_raw$Last_mov <  PENTO_THRESHOLD), "\n")
+cat("infected (chronic)(>=", PENTO_THRESHOLD, "):", sum(last_mov_raw$Last_mov >= PENTO_THRESHOLD), "\n")
 
-# ── Step 2: build main dataset, join Last_mov from raw ──
+# ── Step 2: single pivot + join, recode BEFORE filter ──
 response_data_pre <- response_data_raw |>
   tidyr::pivot_longer(
     cols      = -c(Date, Time, Light1_Dark0),
@@ -69,16 +66,18 @@ response_data_pre <- response_data_raw |>
     key |> dplyr::select(Monitor_TubeLoc, Fly_Sex, Treatment, Status_dead0_alive1),
     by = dplyr::join_by(FlyID == Monitor_TubeLoc)
   ) |>
-  # ── Join raw Last_mov before any filtering ──
   dplyr::left_join(last_mov_raw, by = "FlyID") |>
-  dplyr::filter(Treatment == "Pentomophila", Minute <= ZOOM_MINUTES) |>
-  remove_trailing_zeros() |>
-  # ── Split using raw Last_mov ──
   dplyr::mutate(
     Treatment = dplyr::case_when(
-      Last_mov <  200 ~ "PentomophilaA",
-      Last_mov >= 200 ~ "PentomophilaB"
-    ),
+      Treatment == "Pentomophila" & Last_mov <  PENTO_THRESHOLD ~ "infected (acute)",
+      Treatment == "Pentomophila" & Last_mov >= PENTO_THRESHOLD ~ "infected (chronic)",
+      Treatment == "naive"                                       ~ "naive",
+      TRUE ~ Treatment
+    )
+  ) |>
+  dplyr::filter(Treatment %in% treatment_order, Minute <= ZOOM_MINUTES) |>
+  remove_trailing_zeros() |>
+  dplyr::mutate(
     Treatment    = factor(Treatment, levels = treatment_order),
     Fly_Sex      = dplyr::recode(Fly_Sex, "F" = "Female", "M" = "Male"),
     Fly_Sex      = factor(Fly_Sex, levels = c("Female", "Male")),
@@ -88,19 +87,11 @@ response_data_pre <- response_data_raw |>
                            (Window + 1) * WINDOW_HOURS)
   )
 
-# Verify split
-cat("\nPentomophila A/B split after recode:\n")
-print(
-  response_data_pre |>
-    dplyr::distinct(FlyID, Treatment, Last_mov) |>
-    dplyr::arrange(Last_mov) |>
-    print(n = 20)
-)
-print(
-  response_data_pre |>
-    dplyr::distinct(FlyID, Treatment) |>
-    dplyr::count(Treatment)
-)
+# ── Verify all three groups present ──
+final_counts <- dplyr::distinct(response_data_pre, FlyID, Treatment, Fly_Sex) |>
+  dplyr::count(Treatment, Fly_Sex)
+cat("\nFinal treatment × sex counts:\n"); print(final_counts)
+stopifnot(all(treatment_order %in% levels(droplevels(response_data_pre$Treatment))))
 
 window_levels <- unique(response_data_pre$Window_label[order(response_data_pre$Window)])
 response_data_pre <- response_data_pre |>
@@ -168,27 +159,27 @@ make_bout_plot <- function(summary_df, y_label) {
     ) +
     ggplot2::geom_ribbon(
       ggplot2::aes(ymin = ci_lower, ymax = ci_upper),
-      alpha = 0.2, color = NA
+      alpha       = 0.2,
+      color       = NA,
+      show.legend = FALSE          # removes ribbon key from legend
     ) +
-    ggplot2::geom_line(size = 1.0, alpha = 0.9) +
-    ggplot2::geom_point(size = 2.0, alpha = 0.9) +
+    ggplot2::geom_line(linewidth = 1.2, alpha = 0.9) +
+    ggplot2::geom_point(size = 2.5, alpha = 0.9) +
     ggplot2::facet_wrap(~ Fly_Sex, ncol = 1, strip.position = "top") +
     ggplot2::labs(
-      x       = "6-hour window",
-      y       = y_label,
-      caption = "Ribbon = median ± half-IQR | A: Last_mov < 200 min | B: Last_mov ≥ 200 min"
+      x = "6-hour window",
+      y = y_label
     ) +
     ggplot2::scale_color_manual(values = my_color_palette) +
     ggplot2::scale_fill_manual(values = my_color_palette) +
     ggplot2::scale_x_discrete(labels = show_labels) +
-    ggplot2::theme_minimal(base_size = 13) +
+    ggplot2::theme_minimal(base_size = 18) +    # increased from 17
     ggplot2::theme(
-      legend.position  = "bottom",
-      legend.title     = ggplot2::element_blank(),
-      axis.text.x      = ggplot2::element_text(size = 8, angle = 45, hjust = 1),
-      axis.title       = ggplot2::element_text(size = 11),
-      strip.text       = ggplot2::element_text(face = "bold", size = 12),
-      plot.caption     = ggplot2::element_text(size = 9, color = "gray50"),
+      legend.position  = "none",
+      axis.text.x      = ggplot2::element_text(size = 13, angle = 45, hjust = 1),
+      axis.text.y      = ggplot2::element_text(size = 14),
+      axis.title       = ggplot2::element_text(size = 16),
+      strip.text       = ggplot2::element_text(face = "bold", size = 16),
       panel.grid.minor = ggplot2::element_blank()
     )
 }
@@ -199,20 +190,41 @@ p_n_bouts       <- make_bout_plot(summary_n_bouts,       "Median number of activ
 p_active_bout   <- make_bout_plot(summary_active_bout,   "Median active bout length (min)")
 p_inactive_bout <- make_bout_plot(summary_inactive_bout, "Median inactive bout length (min)")
 
+########## EXTRACT SHARED LEGEND ##########
+
+legend_plot <- make_bout_plot(summary_n_bouts, "") +
+  ggplot2::theme(
+    legend.position       = "bottom",
+    legend.title          = ggplot2::element_blank(),
+    legend.text           = ggplot2::element_text(size = 15),
+    legend.key.width      = ggplot2::unit(1.5, "cm"),
+    legend.background     = ggplot2::element_rect(fill = "white", color = NA),
+    legend.box.background = ggplot2::element_rect(fill = "white", color = NA)
+  )
+
+shared_legend <- cowplot::get_legend(legend_plot)
+
 ########## ASSEMBLE INTO ONE FIGURE ##########
 
-Fig_bout_structure <- cowplot::plot_grid(
+plots_row <- cowplot::plot_grid(
   p_n_bouts,
   p_active_bout,
   p_inactive_bout,
   labels     = c("A", "B", "C"),
-  label_size = 14,
+  label_size = 18,                 # increased from 16
   ncol       = 3
+)
+
+Fig_bout_structure <- cowplot::plot_grid(
+  plots_row,
+  shared_legend,
+  ncol        = 1,
+  rel_heights = c(1, 0.06)
 )
 
 print(Fig_bout_structure)
 cowplot::save_plot("outputs/Figure_bout_structure_PentomophilaAB.png", Fig_bout_structure,
-                   base_width = 18, base_height = 10)
+                   base_width = 18, base_height = 12)
 
 ########## SUMMARY STATISTICS ##########
 
@@ -243,3 +255,38 @@ if (nrow(low_coverage) > 0) {
   cat("\nWARNING: Windows with <3 flies (sparse data):\n")
   print(low_coverage)
 }
+
+########## [PF1] TREATMENT × WINDOW INTERACTION: ACTIVE BOUT NUMBER ##########
+
+lmm_nbouts_time <- lmerTest::lmer(
+  n_active_bouts ~ Treatment * Window * Fly_Sex + (1 | FlyID),
+  data    = bout_features |> dplyr::mutate(Window = as.numeric(Window)),
+  REML    = TRUE,
+  control = lme4::lmerControl(optimizer = "bobyqa")
+)
+
+cat("\n===== TYPE III ANOVA: n_active_bouts ~ Treatment * Window * Sex =====\n")
+print(anova(lmm_nbouts_time, type = "III"))
+
+########## TARGETED CONTRASTS: infected (acute) vs others ##########
+
+emm_nbouts_time <- emmeans::emmeans(
+  lmm_nbouts_time,
+  ~ Treatment | Fly_Sex * Window,
+  at = list(Window = 0:11)
+)
+
+nbouts_targeted <- emmeans::contrast(
+  emm_nbouts_time,
+  method = list(
+    "acute - naive"   = c(-1,  1,  0),
+    "acute - chronic" = c( 0,  1, -1)
+  ),
+  adjust = "BH"
+)
+
+cat("\n===== TARGETED CONTRASTS: infected (acute) vs naive/chronic, BY SEX AND WINDOW =====\n")
+print(nbouts_targeted)
+
+nbouts_targeted_df <- as.data.frame(nbouts_targeted)
+print(nbouts_targeted_df)

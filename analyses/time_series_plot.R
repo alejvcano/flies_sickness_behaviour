@@ -178,3 +178,115 @@ cowplot::save_plot(
   base_width  = 12,
   base_height = 7                                        # <-- increased for B's two panels
 )
+
+
+########## STATISTICAL ANALYSIS ##########
+
+## ── 1. Linear Mixed Model: Activity ~ Treatment * Sex * Hour ──────────────────
+# Prepare hourly data with sex included
+fly_data_hourly_sex <- response_data_pre |>
+  dplyr::rename(id = "FlyID") |>
+  dplyr::mutate(hour = floor(Minute / 60)) |>
+  dplyr::group_by(id, Treatment, Fly_Sex, hour) |>
+  dplyr::summarise(Activity = mean(Activity, na.rm = TRUE), .groups = "drop")
+
+# Fit LMM: Treatment * Fly_Sex * hour as fixed effects, random intercept per fly
+# Three-way interaction decomposed into all main effects + two-way interactions
+lmm_activity <- lme4::lmer(
+  Activity ~ Treatment * Fly_Sex * hour + (1 | id),
+  data    = fly_data_hourly_sex,
+  REML    = TRUE,
+  control = lme4::lmerControl(optimizer = "bobyqa")
+)
+
+cat("\n===== LINEAR MIXED MODEL: Activity ~ Treatment * Sex * Hour =====\n")
+print(summary(lmm_activity))
+
+# Type III ANOVA table via lmerTest (if available) for F-tests on fixed effects
+if (requireNamespace("lmerTest", quietly = TRUE)) {
+  lmm_activity_lmerTest <- lmerTest::lmer(
+    Activity ~ Treatment * Fly_Sex * hour + (1 | id),
+    data    = fly_data_hourly_sex,
+    REML    = TRUE,
+    control = lme4::lmerControl(optimizer = "bobyqa")
+  )
+  cat("\n===== TYPE III ANOVA (Satterthwaite) =====\n")
+  print(anova(lmm_activity_lmerTest, type = "III"))
+}
+
+# Pairwise Treatment contrasts (marginalised over sex and hour)
+if (requireNamespace("emmeans", quietly = TRUE)) {
+  emm_treatment <- emmeans::emmeans(lmm_activity, ~ Treatment)
+  cat("\n===== PAIRWISE TREATMENT CONTRASTS (LMM) =====\n")
+  print(emmeans::contrast(emm_treatment, method = "pairwise", adjust = "tukey"))
+  
+  emm_sex <- emmeans::emmeans(lmm_activity, ~ Fly_Sex)
+  cat("\n===== SEX CONTRAST (LMM) =====\n")
+  print(emmeans::contrast(emm_sex, method = "pairwise"))
+  
+  # Early window (first 72 hours): re-estimate marginal means
+  fly_data_early <- fly_data_hourly_sex |>
+    dplyr::filter(hour <= 72)
+  
+  lmm_activity_early <- lme4::lmer(
+    Activity ~ Treatment * Fly_Sex * hour + (1 | id),
+    data    = fly_data_early,
+    REML    = TRUE,
+    control = lme4::lmerControl(optimizer = "bobyqa")
+  )
+  emm_early <- emmeans::emmeans(lmm_activity_early, ~ Treatment | Fly_Sex)
+  cat("\n===== PAIRWISE TREATMENT CONTRASTS — EARLY WINDOW (0–72 h), BY SEX =====\n")
+  print(emmeans::contrast(emm_early, method = "pairwise", adjust = "tukey"))
+}
+
+## ── 2. Cox Proportional Hazards Model: Survival ~ Treatment + Sex ─────────────
+# Build per-fly survival object: time = death/censoring hour, status = 1 if dead
+cox_data <- response_data_pre |>
+  dplyr::distinct(FlyID, Treatment, Fly_Sex, class, Last_mov) |>
+  dplyr::mutate(
+    time   = floor(Last_mov / 60),          # hours
+    status = dplyr::if_else(class == "dead", 1L, 0L),   # 1 = event, 0 = censored
+    Treatment = factor(Treatment, levels = treatment_order)
+  )
+
+# Fit Cox model with Treatment + Fly_Sex as fixed effects
+cox_model <- survival::coxph(
+  survival::Surv(time, status) ~ Treatment + Fly_Sex,
+  data = cox_data,
+  ties = "efron"
+)
+
+cat("\n===== COX PROPORTIONAL HAZARDS MODEL: Survival ~ Treatment + Sex =====\n")
+print(summary(cox_model))
+
+# Test proportional hazards assumption (Schoenfeld residuals)
+cat("\n===== PROPORTIONAL HAZARDS ASSUMPTION (Schoenfeld) =====\n")
+print(survival::cox.zph(cox_model))
+
+# ── Pairwise hazard ratios for Treatment comparisons ──────────────────────────
+if (requireNamespace("emmeans", quietly = TRUE)) {
+  emm_cox <- emmeans::emmeans(cox_model, ~ Treatment)
+  
+  cat("\n===== PAIRWISE CONTRASTS — LOG HAZARD SCALE (Cox) =====\n")
+  cox_contrasts <- emmeans::contrast(emm_cox, method = "pairwise", adjust = "BH")
+  print(cox_contrasts)
+  
+  cat("\n===== PAIRWISE HAZARD RATIOS (exponentiated, with 95% CI) =====\n")
+  cox_contrasts_df <- as.data.frame(cox_contrasts) |>
+    dplyr::mutate(
+      HR       = exp(estimate),
+      HR_lower = exp(estimate - 1.96 * SE),
+      HR_upper = exp(estimate + 1.96 * SE)
+    ) |>
+    dplyr::select(contrast, HR, HR_lower, HR_upper, p.value)
+  print(cox_contrasts_df)
+}
+
+# Sex-specific Cox model for the sex survival difference statement
+cox_sex <- survival::coxph(
+  survival::Surv(time, status) ~ Fly_Sex,
+  data = cox_data,
+  ties = "efron"
+)
+cat("\n===== COX MODEL: Survival ~ Sex =====\n")
+print(summary(cox_sex))
