@@ -17,7 +17,7 @@ treatment_remap <- c(
 )
 
 MINUTES_PER_HOUR <- 60
-ZOOM_MINUTES     <- 3 * 24 * 60   # First 3 days = 4320 minutes
+ZOOM_MINUTES     <- 3 * 24 * 60  
 
 response_data_pre <- response_data_raw |>
   tidyr::pivot_longer(
@@ -45,7 +45,7 @@ response_data_pre <- response_data_raw |>
 # Bin by HOUR instead of day
 hourly_activity <- response_data_pre |>
   dplyr::mutate(
-    Hour = ((Minute - 1) %/% MINUTES_PER_HOUR) + 1   # Hour 1, 2, ... 72
+    Hour = ((Minute - 1) %/% MINUTES_PER_HOUR) + 1  
   ) |>
   dplyr::group_by(FlyID, Fly_Sex, Treatment, Hour) |>
   dplyr::summarise(
@@ -109,7 +109,6 @@ Fig_hourly_activity <- ggplot2::ggplot(
   ) +
   ggplot2::scale_color_manual(values = my_color_palette) +
   ggplot2::scale_fill_manual(values = my_color_palette) +
-  # X-axis: every 12 hours, label as day+hour for readability
   ggplot2::scale_x_continuous(
     breaks = seq(0, 72, by = 12),
     labels = c("0h", "12h", "24h\n(Day 2)", "36h", "48h\n(Day 3)", "60h", "72h")
@@ -172,9 +171,9 @@ my_color_palette <- stats::setNames(
 
 MINUTES_PER_HOUR <- 60
 BIN_HOURS        <- 6
-MINUTES_PER_BIN  <- BIN_HOURS * MINUTES_PER_HOUR   # 360 minutes
-ZOOM_MINUTES     <- 3 * 24 * 60                     # First 3 days = 4320 minutes
-N_BINS           <- ZOOM_MINUTES / MINUTES_PER_BIN  # 12 bins
+MINUTES_PER_BIN  <- BIN_HOURS * MINUTES_PER_HOUR  
+ZOOM_MINUTES     <- 3 * 24 * 60                     
+N_BINS           <- ZOOM_MINUTES / MINUTES_PER_BIN 
 
 response_data_pre <- response_data_raw |>
   tidyr::pivot_longer(
@@ -202,7 +201,7 @@ response_data_pre <- response_data_raw |>
 # Bin by 6-HOUR windows
 sixhour_activity <- response_data_pre |>
   dplyr::mutate(
-    Bin = ((Minute - 1) %/% MINUTES_PER_BIN) + 1   # Bin 1, 2, ... 12
+    Bin = ((Minute - 1) %/% MINUTES_PER_BIN) + 1  
   ) |>
   dplyr::group_by(FlyID, Fly_Sex, Treatment, Bin) |>
   dplyr::summarise(
@@ -239,7 +238,6 @@ sixhour_means <- sixhour_activity |>
 # Day boundaries fall at bins 4 and 8 (every 4 bins = 24 h)
 day_breaks_bins <- c(4, 8)
 
-# X-axis: one label per bin (bins 1–12 → midpoints at 3h, 9h, 15h, ...)
 bin_labels <- paste0(seq(0, (N_BINS - 1) * BIN_HOURS, by = BIN_HOURS), "h")
 bin_labels[c(1, 5, 9)] <- paste0(bin_labels[c(1, 5, 9)],
                                   c("", "\n(Day 2)", "\n(Day 3)"))
@@ -248,9 +246,8 @@ Fig_6h_activity <- ggplot2::ggplot(
   sixhour_means,
   ggplot2::aes(x = Bin, y = mean_activity, color = Treatment, fill = Treatment)
 ) +
-  # Day boundary vertical lines
   ggplot2::geom_vline(
-    xintercept = day_breaks_bins + 0.5,   # place between bins
+    xintercept = day_breaks_bins + 0.5,   
     linetype   = "dashed",
     color      = "gray60",
     linewidth  = 0.6

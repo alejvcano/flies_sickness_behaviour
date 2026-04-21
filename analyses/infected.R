@@ -1,20 +1,3 @@
-########## HELPER FUNCTIONS ##########
-
-remove_trailing_zeros <- function(df) {
-  df |>
-    dplyr::group_by(FlyID) |>
-    dplyr::mutate(
-      last_nonzero = ifelse(
-        any(Activity != 0),
-        max(which(Activity != 0), na.rm = TRUE),
-        0L
-      )
-    ) |>
-    dplyr::filter(dplyr::row_number() <= last_nonzero) |>
-    dplyr::select(-last_nonzero) |>
-    dplyr::ungroup()
-}
-
 ########## DATA INPUT & PREP ##########
 
 response_data_raw <- read.csv("data/flies_data.csv", sep = ";")
@@ -204,14 +187,12 @@ legend_plot <- make_bout_plot(summary_n_bouts, "") +
 
 shared_legend <- cowplot::get_legend(legend_plot)
 
-########## ASSEMBLE INTO ONE FIGURE ##########
-
 plots_row <- cowplot::plot_grid(
   p_n_bouts,
   p_active_bout,
   p_inactive_bout,
   labels     = c("A", "B", "C"),
-  label_size = 18,                 # increased from 16
+  label_size = 18,               
   ncol       = 3
 )
 
@@ -256,7 +237,7 @@ if (nrow(low_coverage) > 0) {
   print(low_coverage)
 }
 
-########## [PF1] TREATMENT × WINDOW INTERACTION: ACTIVE BOUT NUMBER ##########
+########## TREATMENT × WINDOW INTERACTION: ACTIVE BOUT NUMBER ##########
 
 lmm_nbouts_time <- lmerTest::lmer(
   n_active_bouts ~ Treatment * Window * Fly_Sex + (1 | FlyID),

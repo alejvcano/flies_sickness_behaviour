@@ -173,8 +173,6 @@ panel_B <- ggplot2::ggplot(
     plot.margin      = ggplot2::margin(5, 15, 5, 5, "pt")
   )
 
-########## SHARED LEGEND — built as a bare grob, no panel/line ##########
-
 legend_grob <- ggplot2::ggplot(
   data = data.frame(
     Treatment = factor(treatment_order, levels = treatment_order),
@@ -205,8 +203,6 @@ legend_grob <- ggplot2::ggplot(
   )
 
 shared_legend <- cowplot::get_legend(legend_grob)
-
-########## ASSEMBLE ##########
 
 top_row <- cowplot::plot_grid(
   panel_A,

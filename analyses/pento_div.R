@@ -179,12 +179,12 @@ p_supp_A <- ggplot2::ggplot(
   ggplot2::scale_x_continuous(breaks = seq(1, 24, by = 2)) +
   ggplot2::labs(
     x = "Hour post-infection",
-    y = "Mean Activity (per hour)"           # caption removed
+    y = "Mean Activity (per hour)" 
   ) +
   ggplot2::scale_color_manual(
     values = my_color_palette[c("infected (acute)", "infected (chronic)")]
   ) +
-  ggplot2::theme_minimal(base_size = 16) +   # increased from 12
+  ggplot2::theme_minimal(base_size = 16) +  
   ggplot2::theme(
     legend.position  = "bottom",
     legend.title     = ggplot2::element_blank(),
@@ -207,11 +207,11 @@ p_supp_B <- ggplot2::ggplot(
                        fill = "#CC79A7", alpha = 0.3) +
   ggplot2::facet_wrap(~ Fly_Sex) +
   ggplot2::scale_x_continuous(breaks = seq(1, 24, by = 2)) +
-  ggplot2::labs(                             # subtitle removed
+  ggplot2::labs(                           
     x = "Hour post-infection",
     y = "Z-score from chronic mean"
   ) +
-  ggplot2::theme_minimal(base_size = 16) +   # increased from 12
+  ggplot2::theme_minimal(base_size = 16) +  
   ggplot2::theme(
     legend.position  = "none",
     axis.text        = ggplot2::element_text(size = 13),
@@ -222,7 +222,7 @@ p_supp_B <- ggplot2::ggplot(
 
 Fig_supplementary <- cowplot::plot_grid(
   p_supp_A, p_supp_B,
-  labels = c("A", "B"), label_size = 18, ncol = 2  # label_size increased from 14
+  labels = c("A", "B"), label_size = 18, ncol = 2  
 )
 
 print(Fig_supplementary)
@@ -313,15 +313,6 @@ Fig_main <- cowplot::plot_grid(
 print(Fig_main)
 cowplot::save_plot("outputs/Figure_PentoA_divergence_vs_lastmov.png", Fig_main,
                    base_width = 12, base_height = 6)
-
-########## EXPORT ##########
-
-write.csv(divergence_scores, "outputs/pentoA_divergence_scores_day1.csv", row.names = FALSE)
-write.csv(fly_cum_div,       "outputs/pentoA_cumulative_div_per_fly.csv", row.names = FALSE)
-write.csv(div_summary,       "outputs/pento_divergence_summary_day1.csv", row.names = FALSE)
-write.csv(ts_stats,          "outputs/pento_theilsen_trend.csv",          row.names = FALSE)
-
-cat("\nDivergence analysis complete!\n")
 
 ########## STATISTICAL ANALYSIS: ACUTE vs CHRONIC ACTIVITY DAY 1 ##########
 
